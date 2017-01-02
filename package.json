@@ -1,0 +1,19 @@
+{
+  "name": "tblu-agent",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TBlu-Company/tblu-agent.git"
+  },
+  "author": "",
+  "license": "SEE LICENSE IN TBlu-Company",
+  "bugs": {
+    "url": "https://github.com/TBlu-Company/tblu-agent/issues"
+  },
+  "homepage": "https://github.com/TBlu-Company/tblu-agent#readme"
+}
