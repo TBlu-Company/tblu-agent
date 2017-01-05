@@ -38,7 +38,7 @@ const saveInDB = (item, status, coleta) => {
         gatherDate: new Date().getTime(),
         executeStatus: status,
         gather: gather,
-        error: error
+        gatherError: error
     };
     logger.debug(__filename, "saveInDB", "saveDB doc", JSON.stringify(doc));
     dBgather.insert(doc);
