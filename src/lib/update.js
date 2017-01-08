@@ -216,7 +216,7 @@ const readInsert = () => new Promise((resolve, reject) => {
                                     };
                                 }).catch(error => reject(error));
                             }).catch(error => {
-                                logger.error(__filename, "readInsert", "Not Read Insert", JSON.stringify(error));
+                                logger.error(__filename, "readInsert", "Not Read Insert", JSON.stringify(error.statusCode) + " - " + error.data);
                                 reject(error);
                             });
                         };
