@@ -57,7 +57,7 @@ const startCronItem = (item) => new Promise((resolve, reject) => {
         logger.debug(__filename, "startCronItem", "Add Job", item.component + '_' + item.metric);
         arrayCrons[item.component + '_' + item.metric] = schedule.scheduleJob(item.periodicity, function() {
             logger.debug(__filename, "startCronItem", "Running", item.component + '_' + item.metric);
-            mod.run(item).then(result => {
+            mod.run(item, dBconfig).then(result => {
                 try {
                     let temp = JSON.parse(JSON.stringify(result));
                     saveInDB(item, true, temp);

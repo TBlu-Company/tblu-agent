@@ -235,9 +235,10 @@ createDirList().then(() => {
     return readUUID()
 }).then(() => {
     return setGlobal()
-}).then(() => {
-    // Inicio Passo 3
-    return update.readUpdates()
+    // O Update deve executar somente pela cron
+    // }).then(() => {
+    //     // Inicio Passo 3
+    //     return update.readUpdates()
 }).then(() => {
     // Inicio Passo 4
     return cron.startCron();

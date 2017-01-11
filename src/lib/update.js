@@ -212,6 +212,7 @@ const readInsert = () => new Promise((resolve, reject) => {
                                         }, {
                                             value: d
                                         });
+                                        dBconfig.persistence.compactDatafile();
                                         resolve(0);
                                     };
                                 }).catch(error => reject(error));
