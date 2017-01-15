@@ -45,14 +45,14 @@ const logger = require('../logger/logger.js');
 // //     logger.error(__filename, 'client.on', 'something went wrong on the request - data: ', err);
 // // });
 
-const post = (method, args) => new Promise((resolve, reject) => {
+const post = (method, body) => new Promise((resolve, reject) => {
     logger.debug(__filename, "rest method ", method)
     try {
 
         var options = {
             method: 'POST',
             json: true,
-            body: args.data
+            body: body
         };
         switch (method) {
             case 'getcomponentUID':

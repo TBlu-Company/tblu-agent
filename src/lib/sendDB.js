@@ -44,14 +44,9 @@ const sendDBData = (skip, limit) => new Promise((resolve, reject) => {
                             e['account'] = doc1.value;
                             delete e['_id'];
                         });
-                        let args = {
-                            data: data,
-                            headers: {
-                                "Content-Type": "application/json"
-                            }
-                        };
-                        logger.debug(__filename, "sendDBData", "Post Args", JSON.stringify(args));
-                        rest('addGather', args).then(result => {
+
+                        logger.debug(__filename, "sendDBData", "Post Args", JSON.stringify(data));
+                        rest('addGather', data).then(result => {
                             logger.debug(__filename, "sendDBData", "Send Docs - result", result);
                             logger.info(__filename, "sendDBData", "Send Docs", data.length);
                             let actions = docs.map(deleteDoc);

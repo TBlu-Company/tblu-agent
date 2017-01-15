@@ -32,13 +32,7 @@ const updateStatus = (item, status) => new Promise((resolve, reject) => {
                 account: accountUID,
                 deploymentStatus: status
             };
-            let args = {
-                data: bdata,
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            };
-            rest('updateDeploymentStatus', args).then(resutl => {
+            rest('updateDeploymentStatus', bdata).then(resutl => {
                 resolve(0)
             }).catch(error => {
                 reject(error)
@@ -167,44 +161,32 @@ const readInsert = () => new Promise((resolve, reject) => {
                             logger.error(__filename, "readInsert", "Cant read DateLastInsert");
                             reject(err);
                         } else {
-                            let accountUID = doc1.value;
-                            let componentUID = doc2.value;
-                            let bdata;
+                            let tempD;
                             if (doc3 == null) {
-                                bdata = {
-                                    component: componentUID,
-                                    account: accountUID
-                                };
+                                tempD = new Date().getTime();
                             } else {
-                                let dateSend = new Date(doc3.valeu).getTime();
-                                bdata = {
-                                    component: componentUID,
-                                    insertDate: dateSend,
-                                    account: accountUID
-                                };
+                                tempD = doc3.value;
+                            }
+                            let bdata = {
+                                component: doc2.value,
+                                insertDate: tempD,
+                                account: doc1.value
                             };
-
-                            let args = {
-                                data: bdata,
-                                headers: {
-                                    "Content-Type": "application/json"
-                                }
-                            };
-                            logger.debug(__filename, "readInsert", "Post Args", JSON.stringify(args));
-                            rest('getMetricInsert', args).then(resutl => {
+                            logger.debug(__filename, "readInsert", "Post Args", JSON.stringify(bdata));
+                            rest('getMetricInsert', bdata).then(resutl => {
                                 logger.debug(__filename, "readInsert", "rest", JSON.stringify(resutl));
                                 let actions = resutl.map(processInsert);
                                 let results = Promise.all(actions);
                                 results.then(retorno => {
                                     logger.debug(__filename, "readInsert", "Promise All", retorno);
-                                    let d = new Date();
+                                    let d = new Date().getTime();
                                     let query = {
                                         name: "DateLastInsert"
                                     };
 
                                     let update = {
                                         name: "DateLastInsert",
-                                        value: d
+                                        value: new Date().getTime()
                                     };
                                     let options = {
                                         upsert: true
@@ -224,6 +206,7 @@ const readInsert = () => new Promise((resolve, reject) => {
                                 logger.error(__filename, "readInsert", "Not Read Insert", JSON.stringify(error.statusCode) + " - " + error.data);
                                 reject(error);
                             });
+
                         };
                     });
                 };
@@ -253,41 +236,30 @@ const readDisable = () => new Promise((resolve, reject) => {
                         name: 'DateLastDisable'
                     }).exec(function(err, doc3) {
                         if (err) {
-                            logger.error(__filename, "readDisable", "Cant read DateLastInsert");
+                            logger.error(__filename, "readDisable", "Cant read DateLastDisable");
                             reject(err);
                         } else {
-                            let accountUID = doc1.value;
-                            let componentUID = doc2.value;
-                            let bdata;
+                            logger.debug(__filename, "readDisable", "DateLastDisable", JSON.stringify(doc3));
+                            let tempD;
                             if (doc3 == null) {
-                                bdata = {
-                                    component: componentUID,
-                                    account: accountUID
-                                };
+                                tempD = new Date().getTime();
                             } else {
-                                let dateSend = new Date(doc3.valeu).getTime();
-                                bdata = {
-                                    component: componentUID,
-                                    disableDate: dateSend,
-                                    account: accountUID
-                                };
+                                tempD = doc3.value;
+                            }
+                            let bdata = {
+                                component: doc2.value,
+                                disableDate: tempD,
+                                account: doc1.value
                             };
-
-                            let args = {
-                                data: bdata,
-                                headers: {
-                                    "Content-Type": "application/json"
-                                }
-                            };
-                            logger.debug(__filename, "readDisable", "Post Args", JSON.stringify(args));
-                            rest('getMetricDisable', args).then(resutl => {
+                            logger.debug(__filename, "readDisable", "Post Args", JSON.stringify(bdata));
+                            rest('getMetricDisable', bdata).then(resutl => {
                                 logger.debug(__filename, "readDisable", "rest", JSON.stringify(resutl));
                                 let actions = resutl.map(processDisable);
                                 let results = Promise.all(actions);
                                 results.then(retorno => {
                                     logger.debug(__filename, "readDisable", "Promise All", retorno);
 
-                                    let d = new Date();
+                                    let d = new Date().getTime();
                                     let query = {
                                         name: "DateLastDisable"
                                     };
