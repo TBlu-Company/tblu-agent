@@ -51,6 +51,32 @@ const startCronItem = (item) => new Promise((resolve, reject) => {
     if (typeof job != 'undefined') {
         logger.debug(__filename, "startCronItem", "Stop Job", item.component + '_' + item.metric);
         job.cancel();
+    } else {
+        if (item.noExecuteOnInstall == false) {
+            try {
+                let mod = require(item.npm);
+                mod.run(item, dBconfig).then(result => {
+                    try {
+                        let temp = JSON.parse(JSON.stringify(result));
+                        saveInDB(item, true, temp);
+                    } catch (e) {
+                        logger.error(__filename, "startCronItem", "Error ao processar pela primeira vez a metrica: " + item.component + '_' + item.metric, e);
+                    }
+
+                }).catch(error => {
+                    try {
+                        let temp = JSON.parse(JSON.stringify(error));
+                        saveInDB(item, false, temp);
+                    } catch (e) {
+                        logger.error(__filename, "startCronItem", "Error ao processar retorno da metrica pela primeira vez: " + item.component + '_' + item.metric, e);
+                    }
+                });
+            } catch (e) {
+                logger.error(__filename, "startCronItem", "It was not possible to execute metric first time", JSON.stringify(item));
+                logger.error(__filename, "startCronItem", "It was not possible to execute metric first time", e);
+                reject(e);
+            }
+        }
     };
     try {
         let mod = require(item.npm);

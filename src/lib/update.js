@@ -197,24 +197,28 @@ const readInsert = () => new Promise((resolve, reject) => {
                                 let results = Promise.all(actions);
                                 results.then(retorno => {
                                     logger.debug(__filename, "readInsert", "Promise All", retorno);
-                                    dBmetrics.persistence.compactDatafile();
                                     let d = new Date();
-                                    if (doc3 == null) {
-                                        let data = {
-                                            name: 'DateLastInsert',
-                                            value: d
-                                        };
-                                        dBconfig.insert(data);
-                                        resolve(0);
-                                    } else {
-                                        dBconfig.update({
-                                            name: 'DateLastInsert'
-                                        }, {
-                                            value: d
-                                        });
-                                        dBconfig.persistence.compactDatafile();
-                                        resolve(0);
+                                    let query = {
+                                        name: "DateLastInsert"
                                     };
+
+                                    let update = {
+                                        name: "DateLastInsert",
+                                        value: d
+                                    };
+                                    let options = {
+                                        upsert: true
+                                    };
+                                    dBconfig.update(query, update, options, (err, data) => {
+                                        if (err) {
+                                            reject(err);
+                                        } else {
+                                            dBmetrics.persistence.compactDatafile();
+                                            dBconfig.persistence.compactDatafile();
+                                            resolve(0);
+                                        }
+
+                                    });
                                 }).catch(error => reject(error));
                             }).catch(error => {
                                 logger.error(__filename, "readInsert", "Not Read Insert", JSON.stringify(error.statusCode) + " - " + error.data);
@@ -282,23 +286,30 @@ const readDisable = () => new Promise((resolve, reject) => {
                                 let results = Promise.all(actions);
                                 results.then(retorno => {
                                     logger.debug(__filename, "readDisable", "Promise All", retorno);
-                                    dBmetrics.persistence.compactDatafile();
+
                                     let d = new Date();
-                                    if (doc3 == null) {
-                                        let data = {
-                                            name: 'DateLastDisable',
-                                            value: d
-                                        };
-                                        dBconfig.insert(data);
-                                        resolve(0);
-                                    } else {
-                                        dBconfig.update({
-                                            name: 'DateLastDisable'
-                                        }, {
-                                            value: d
-                                        });
-                                        resolve(0);
-                                    }
+                                    let query = {
+                                        name: "DateLastDisable"
+                                    };
+
+                                    let update = {
+                                        name: "DateLastDisable",
+                                        value: d
+                                    };
+                                    let options = {
+                                        upsert: true
+                                    };
+                                    dBconfig.update(query, update, options, (err, data) => {
+                                        if (err) {
+                                            reject(err);
+                                        } else {
+                                            dBmetrics.persistence.compactDatafile();
+                                            dBconfig.persistence.compactDatafile();
+                                            resolve(0);
+                                        }
+
+                                    });
+
                                 }).catch(error => reject(error));
                             }).catch(error => {
                                 logger.error(__filename, "readDisable", "Not Read Disable", JSON.stringify(error));
