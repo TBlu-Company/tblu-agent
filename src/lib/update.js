@@ -161,16 +161,12 @@ const readInsert = () => new Promise((resolve, reject) => {
                             logger.error(__filename, "readInsert", "Cant read DateLastInsert");
                             reject(err);
                         } else {
-                            let tempD;
-                            if (doc3 == null) {
-                                tempD = new Date().getTime();
-                            } else {
-                                tempD = doc3.value;
-                            }
                             let bdata = {
                                 component: doc2.value,
-                                insertDate: tempD,
                                 account: doc1.value
+                            };
+                            if (doc3 != null) {
+                                bdata['insertDate'] = doc3.value;
                             };
                             logger.debug(__filename, "readInsert", "Post Args", JSON.stringify(bdata));
                             rest('getMetricInsert', bdata).then(resutl => {
@@ -240,16 +236,12 @@ const readDisable = () => new Promise((resolve, reject) => {
                             reject(err);
                         } else {
                             logger.debug(__filename, "readDisable", "DateLastDisable", JSON.stringify(doc3));
-                            let tempD;
-                            if (doc3 == null) {
-                                tempD = new Date().getTime();
-                            } else {
-                                tempD = doc3.value;
-                            }
                             let bdata = {
                                 component: doc2.value,
-                                disableDate: tempD,
                                 account: doc1.value
+                            };
+                            if (doc3 != null) {
+                                bdata['disableDate'] = doc3.value;
                             };
                             logger.debug(__filename, "readDisable", "Post Args", JSON.stringify(bdata));
                             rest('getMetricDisable', bdata).then(resutl => {
