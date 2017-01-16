@@ -171,7 +171,7 @@ const readSendDBCronTime = () => new Promise((resolve, reject) => {
         } else {
             if (doc == null) {
                 let x = Math.floor((Math.random() * 59) + 1);
-                let t = x + ' */10 * * * *';
+                let t = x + ' */2 * * * *';
                 let data = {
                     name: 'SendDBCronTime',
                     value: t
