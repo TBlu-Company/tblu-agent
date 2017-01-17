@@ -81,7 +81,9 @@ const startCronItem = (item) => new Promise((resolve, reject) => {
     try {
         let mod = require(item.npm);
         logger.debug(__filename, "startCronItem", "Add Job", item.component + '_' + item.metric);
-        arrayCrons[item.component + '_' + item.metric] = schedule.scheduleJob(item.periodicity, function() {
+        let x = Math.floor((Math.random() * 59) + 1);
+        let t = x + ' ' + item.periodicity;
+        arrayCrons[item.component + '_' + item.metric] = schedule.scheduleJob(t, function() {
             logger.debug(__filename, "startCronItem", "Running", item.component + '_' + item.metric);
             mod.run(item, dBconfig).then(result => {
                 try {
