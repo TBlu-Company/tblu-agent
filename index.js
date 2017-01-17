@@ -1,4 +1,5 @@
 'use strict'
+process.env.LANG = 'en';
 // Load Caminho
 const path = require('path');
 const filename = path.basename(__filename);
