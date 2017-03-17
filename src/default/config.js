@@ -1,6 +1,6 @@
 'use strict';
 const url_api = "https://api.tblu.com.br";
-// const url_api = "http://localhost:8000";
+//const url_api = "http://localhost:8000";
 const url_api_component_UID = url_api + "/components/get_UID";
 const url_api_metric_insert = url_api + "/component_metric/list_insert";
 const url_api_metric_exclude = url_api + "/component_metric/list_disable";
