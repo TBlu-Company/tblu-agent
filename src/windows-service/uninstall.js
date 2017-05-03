@@ -18,6 +18,7 @@ process.on('uncaughtException', function(err) {
     fileWriter.appendFile(__dirname + "../../log/error.log", err, function(failure) {
         if (failure) console.log(failure);
     })
+    console.log('Error: ' + err);
 });
 
 // Stop the service.
