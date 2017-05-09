@@ -4,7 +4,7 @@ let Service = require('node-windows').Service;
 let svc = new Service({
     name: 'Tblu',
     description: 'Collector agent for Tblu.',
-    script: require('path').join(__dirname, '../../index.js')
+    script: require('path').join(__dirname, '../../../index.js'),
     wait: 2,
     grow: .5
 });
@@ -22,11 +22,11 @@ svc.on('alreadyinstalled', function() {
 });
 
 process.on('uncaughtException', function(err) {
+    console.log('Error: ' + err);
     let fileWriter = require('fs');
-    fileWriter.appendFile(__dirname + "../../log/error.log", err, function(failure) {
+    fileWriter.appendFile(__dirname + "/../../../log/error.log", err, function(failure) {
         if (failure) console.log(failure);
     })
-    console.log('Error: ' + err);
 });
 
 svc.install();
