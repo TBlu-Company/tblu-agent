@@ -5,7 +5,9 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "node index.js tblu-agent"
+        "start": "node index.js tblu-agent",
+        "service-install": "node ./src/services/install.js",
+        "service-uninstall": "node ./src/services/linux/service-uninstall.js"
     },
     "repository": {
         "type": "git",
