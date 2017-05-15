@@ -1,3 +1,4 @@
+'use strict'
 const cmd = require('async-exec-cmd')
 
 const testUser = (userObject) => new Promise((resolve, reject) => {

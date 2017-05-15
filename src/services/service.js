@@ -11,6 +11,7 @@ const logger = require('../logger/logger.js');
 const createDir = require('../lib/createDir.js');
 const loadDataBase = require('../lib/loadDataBase.js');
 const readInput = require('../lib/readInput.js');
+const oracleHome = require('../lib/oracleHome.js');
 
 let dBconfig = null;
 let dBmetrics = null;
@@ -128,7 +129,7 @@ function nodeLinux(atividade) {
         group: "tblu",
         env: [{
           name: "HOME",
-          value: dirname // service is now able to access the user who created its' home directory
+          value: dirname
         }, {
           name: "LANG",
           value: 'en_US.UTF-8'
@@ -140,9 +141,22 @@ function nodeLinux(atividade) {
           value: 'C'
         }]
       };
-      processarService(atividade, service, customOption);
+      oracleHome.getOracleHome().then((result) => {
+        if (typeof result != 'undefined') {
+          customOption.env.push({
+            name: "ORACLE_HOME",
+            value: result[0]
+          });
+          customOption.env.push({
+            name: "LD_LIBRARY_PATH",
+            value: result[1]
+          });
+        };
+        processarService(atividade, service, customOption);
+      }).catch((err) => {
+        logger.error(__filename, "nodeLinux", "oracleHome", err);
+      });
     }).catch((err) => {
-      console.log(err)
       logger.error(__filename, "nodeLinux", "createUserLinux", err);
     });
   }).catch((err) => {
