@@ -3,7 +3,7 @@
 const path = require('path');
 const filename = path.basename(__filename);
 const dirname = path.dirname(__filename);
-
+global.basedir = dirname;
 // Load Libs
 
 
@@ -24,6 +24,8 @@ const readInput = require('./src/lib/readInput.js');
 let dBmetrics = null;
 let dBconfig = null;
 let dBgather = null;
+let gid = null;
+let uid = null;
 
 
 

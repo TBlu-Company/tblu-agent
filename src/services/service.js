@@ -2,6 +2,7 @@
 const path = require('path');
 const platform = require('os').platform();
 const dirname = path.dirname(__filename).replace('/src/services', '');
+global.basedir = dirname;
 
 const _ = require('lodash');
 
@@ -16,6 +17,8 @@ const oracleHome = require('../lib/oracleHome.js');
 let dBconfig = null;
 let dBmetrics = null;
 let dBgather = null;
+let gid = null;
+let uid = null;
 
 const defaultServiceConfig = {
   name: 'TBlu Agent',
@@ -49,13 +52,15 @@ const createUserLinux = () => new Promise((resolve, reject) => {
   linuxUser.addGroup({
     name: 'tblu',
     gid: 700
-  }).then(() => {
+  }).then((gid1) => {
+    gid = gid1;
     linuxUser.addUser({
       name: 'tblu',
       gid: 700,
       uid: 700,
       dirname: dirname
-    }).then(() => {
+    }).then((uid1) => {
+      uid = uid1;
       resolve(true);
     }).catch((err) => {
       reject(err)
@@ -76,11 +81,11 @@ const createService = (service, customOption) => new Promise((resolve, reject) =
   });
   svc.on('install', function() {
     logger.info(__filename, "createService", "Install complete");
-    svc.start();
+    process.exit(0)
   });
   svc.on('alreadyinstalled', function() {
     logger.info(__filename, "createService", "Install complete");
-    svc.start();
+    process.exit(0)
   });
   svc.on('start', function() {
     logger.info(__filename, "createService", "Start Service Agent");

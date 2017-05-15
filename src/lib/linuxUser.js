@@ -13,7 +13,7 @@ const testUser = (userObject) => new Promise((resolve, reject) => {
         resolve(false);
       }
     } else {
-      resolve(true);
+      resolve(Number(res.split(':')[2]));
     }
   });
 })
@@ -30,7 +30,7 @@ const testGroup = (groupObject) => new Promise((resolve, reject) => {
         resolve(false);
       }
     } else {
-      resolve(true);
+      resolve(Number(res.split(':')[2]));
     }
   });
 })
@@ -55,7 +55,7 @@ const addUser = (userObject) => new Promise((resolve, reject) => {
         if (err) {
           reject(err)
         } else {
-          resolve(true);
+          resolve(Number(userObject.uid));
         }
       })
     }
@@ -76,7 +76,7 @@ const addGroup = (groupObject) => new Promise((resolve, reject) => {
         if (err) {
           reject(err)
         } else {
-          resolve(true);
+          resolve(Number(groupObject.gid));
         }
       })
     }
