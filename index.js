@@ -1,13 +1,12 @@
 'use strict'
-process.env.LANG = 'en';
 // Load Caminho
 const path = require('path');
 const filename = path.basename(__filename);
 const dirname = path.dirname(__filename);
 
 // Load Libs
-const mkdirp = require('mkdirp');
-const readline = require('readline');
+
+
 const Datastore = require('nedb')
 
 // Load Includes
@@ -15,60 +14,18 @@ const logger = require('./src/logger/logger.js');
 const update = require('./src/lib/update.js');
 const cron = require('./src/lib/cron.js');
 const sendDB = require('./src/lib/sendDB.js');
+const createDir = require('./src/lib/createDir.js');
+const loadDataBase = require('./src/lib/loadDataBase.js');
+const readInput = require('./src/lib/readInput.js');
+
+
 
 // Variables
 let dBmetrics = null;
 let dBconfig = null;
 let dBgather = null;
-let dbAutocompactionInterval = 10000;
-
-// Inicio Passo 1
-// Cria diretorio
-const createDir = (dirname) => {
-  return mkdirp(dirname, function(err) {
-    logger.debug(__filename, "createDir", "CreatDir: " + dirname);
-    if (err) {
-      logger.error(__filename, "createDir", "Error CreatDir: " + dirname, err);
-      return Promise.reject(new Error("fail"))
-    } else {
-      return Promise.resolve(0);
-    }
-  });
-};
-
-// Cria list de diretorios
-const createDirList = () => new Promise((resolve, reject) => {
-  const listP = [createDir(dirname + '/data'), createDir(dirname + '/log')]
-  Promise.all(listP).then(result => resolve(result)).catch(error => reject(error));
-});
 
 
-const loadDataBase = () => new Promise((resolve, reject) => {
-  dBconfig = new Datastore(dirname + '/data/config.db');
-  dBconfig.loadDatabase();
-  dBconfig.persistence.setAutocompactionInterval(dbAutocompactionInterval);
-  dBmetrics = new Datastore(dirname + '/data/metrics.db');
-  dBmetrics.loadDatabase();
-  dBmetrics.removeIndex('metric');
-  dBmetrics.ensureIndex({
-    fieldName: 'metric'
-  }, function(err) {
-    // If there was an error, err is not null
-  });
-  dBmetrics.removeIndex('component');
-  dBmetrics.ensureIndex({
-    fieldName: 'component'
-  }, function(err) {
-    // If there was an error, err is not null
-  });
-  dBmetrics.persistence.compactDatafile();
-  dBmetrics.persistence.setAutocompactionInterval(dbAutocompactionInterval);
-  dBgather = new Datastore(dirname + '/data/gather.db');
-  dBgather.loadDatabase();
-  dBgather.persistence.compactDatafile();
-  dBgather.persistence.setAutocompactionInterval(dbAutocompactionInterval);
-  resolve(0);
-});
 
 const setGlobal = () => new Promise((resolve, reject) => {
   update.setGlobal(dBconfig, dirname, dBmetrics);
@@ -80,66 +37,6 @@ const setGlobal = () => new Promise((resolve, reject) => {
 // Fim Passo 1
 // Inicio Passo 2
 // Ler AccountUID e ComponentUID
-
-const readAccountUID = () => new Promise((resolve, reject) => {
-  logger.debug(__filename, "readAccountUID", "Init");
-  dBconfig.findOne({
-    name: 'AccountUID'
-  }).exec(function(err, doc) {
-    if (err) {
-      logger.error(__filename, "readAccountUID", "Error Read AccountUID", err);
-    } else {
-      if (doc == null) {
-        let rl = readline.createInterface({
-          input: process.stdin,
-          output: process.stdout
-        });
-        rl.question('\n\n\nInsert your AccountUID: ', (answer) => {
-          let res = answer.replace(/' '/g, '');
-          let data = {
-            name: 'AccountUID',
-            value: res
-          };
-          dBconfig.insert(data);
-          rl.close();
-          resolve(0);
-        });
-      } else {
-        resolve(0);
-      };
-    };
-  });
-});
-
-const readComponentUUID = () => new Promise((resolve, reject) => {
-  logger.debug(__filename, "readComponentUUID", "Init");
-  dBconfig.findOne({
-    name: 'ComponentUID'
-  }).exec(function(err, doc) {
-    if (err) {
-      logger.error(__filename, "readAccountUID", "Error Read ComponentUID", err);
-    } else {
-      if (doc == null) {
-        let rl = readline.createInterface({
-          input: process.stdin,
-          output: process.stdout
-        });
-        rl.question('\n\n\nInsert your ComponentUID: ', (answer) => {
-          let res = answer.replace(/' '/g, '');
-          let data = {
-            name: 'ComponentUID',
-            value: res
-          };
-          dBconfig.insert(data);
-          rl.close();
-          resolve(0);
-        });
-      } else {
-        resolve(0);
-      };
-    };
-  });
-});
 
 const readSendDBLimit = () => new Promise((resolve, reject) => {
   logger.debug(__filename, "readSendDBLimit", "Init");
@@ -214,13 +111,26 @@ const readUpdateCronTime = () => new Promise((resolve, reject) => {
   });
 });
 
-const readUUID = () => new Promise((resolve, reject) => {
-  logger.debug(__filename, "readUUID", "Init");
-  readAccountUID().then(() => {
-    return readComponentUUID();
-  }).then(() => {
-    return readSendDBLimit();
-  }).then(() => {
+
+const initProcess = () => new Promise((resolve, reject) => {
+  createDir(dirname).then(() => {
+    loadDataBase(dirname).then((result) => {
+      dBconfig = result[0];
+      dBmetrics = result[1];
+      dBgather = result[2];
+    }).then(() => {
+      return readInput.readAccountUID(dBconfig)
+    }).then(() => {
+      return readInput.readComponentUUID(dBconfig);
+    }).then(() => {
+      resolve(0);
+    });
+  })
+})
+
+const readLimits = () => new Promise((resolve, reject) => {
+  logger.debug(__filename, "readLimits", "Init");
+  readSendDBLimit().then(() => {
     return readSendDBCronTime();
   }).then(() => {
     return readUpdateCronTime();
@@ -232,16 +142,10 @@ const readUUID = () => new Promise((resolve, reject) => {
 // Fim Passo 2
 
 // Inicio Geral
-createDirList().then(() => {
-  return loadDataBase()
-}).then(() => {
-  return readUUID()
+initProcess().then(() => {
+  return readLimits()
 }).then(() => {
   return setGlobal()
-  // O Update deve executar somente pela cron
-  // }).then(() => {
-  //     // Inicio Passo 3
-  //     return update.readUpdates()
 }).then(() => {
   // Inicio Passo 4
   return cron.startCron();
