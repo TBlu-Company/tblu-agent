@@ -3,6 +3,8 @@ const npm = require("npm-programmatic");
 const logger = require('../logger/logger.js');
 const rest = require('../rest/rest.js');
 const cron = require('./cron.js');
+const _ = require('lodash');
+
 
 // Inicio Passo 3
 let dBconfig = null;
@@ -91,16 +93,19 @@ const installNPM = (item) => new Promise((resolve, reject) => {
     logger.debug(__filename, "installNPM", "module exist:", item.npm);
     resolve(0);
   } catch (e) {
+    let env = _.cloneDeep(process.env);
     npm.install(item.npm, {
       cwd: item.dirname || dirname,
+      env: env,
       global: false,
       save: true,
       output: false
     }).then(function() {
       logger.debug(__filename, "installNPM", "module installed:", item.npm);
       resolve(0)
-    }).catch(function(err) {
-      logger.debug(__filename, "installNPM", "It was not possible to install the module:", item.npm);
+    }).catch((err) => {
+      logger.error(__filename, "installNPM", "It was not possible to install the module:", item.npm);
+      logger.error(__filename, "installNPM", "It was not possible to install the module:", err);
       reject('Erro install : ' + item.npm);
     });
   };

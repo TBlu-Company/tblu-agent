@@ -1,6 +1,5 @@
 # config
 config
-package.json
 
 # data
 data
@@ -39,11 +38,13 @@ build/Release
 node_modules
 jspm_packages
 
+
 # Dist for prod
 dist
 
 # Optional npm cache directory
 .npm
+.node-gyp
 
 # Optional eslint cache
 .eslintcache

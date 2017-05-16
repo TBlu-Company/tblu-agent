@@ -14,9 +14,9 @@ const testOracleHomeEnv = () => new Promise((resolve, reject) => {
       result[1] = process.env[key];
     };
     if (count == 0) {
-      if (result.length > 2) {
+      if (result.length > 1) {
         resolve(result)
-      } else if (result.length > 1) {
+      } else if (result.length > 0) {
         if (typeof result[0] == "undefined") {
           reject();
         } else {
