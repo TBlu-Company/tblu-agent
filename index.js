@@ -1,5 +1,6 @@
 'use strict'
 const help = require('./lib/helper/help');
+const configure = require('./lib/orchestration/configure')
 
 function atividade() {
   if (process.argv.length < 3) {
@@ -10,7 +11,7 @@ function atividade() {
         console.log('start');
         break;
       case 'configure':
-        console.log('configure');
+        configure();
         break;
       case 'service':
         console.log('service');
