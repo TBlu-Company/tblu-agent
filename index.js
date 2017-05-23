@@ -1,4 +1,8 @@
 'use strict'
+global.properties = require('./lib/global/properties');
+const path = require('path');
+const filename = path.basename(__filename);
+global.properties.setAppDir(path.dirname(__filename));
 const help = require('./lib/helper/help');
 const configure = require('./lib/orchestration/configure');
 const service = require('./lib/orchestration/service');
