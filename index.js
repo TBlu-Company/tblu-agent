@@ -1,34 +1,36 @@
 'use strict'
-global.properties = require('./lib/global/properties');
 const path = require('path');
-const filename = path.basename(__filename);
+global.properties = require('./lib/global/properties');
 global.properties.setAppDir(path.dirname(__filename));
 const help = require('./lib/helper/help');
-const configure = require('./lib/orchestration/configure');
-const service = require('./lib/orchestration/service');
-const start = require('./lib/orchestration/start');
+const appConfigure = require('./lib/orchestration/configure');
+const appService = require('./lib/orchestration/service');
+const appStart = require('./lib/orchestration/start');
+const npmInstallAll = require('./lib/npm/npm-installAll')
 
-function atividade() {
-  if (process.argv.length < 3) {
-    console.log('start');
-  } else {
-    switch (process.argv[2]) {
-      case 'start':
-        start();
-        break;
-      case 'configure':
-        configure();
-        break;
-      case 'service':
-        service();
-        break;
-      case 'help':
-        help();
-        break;
-      default:
-        help();
+const start = () => {
+  npmInstallAll().then(() => {
+    if (process.argv.length < 3) {
+      appStart();
+    } else {
+      switch (process.argv[2]) {
+        case 'start':
+          appStart();
+          break;
+        case 'configure':
+          appConfigure();
+          break;
+        case 'service':
+          appService();
+          break;
+        case 'help':
+          help();
+          break;
+        default:
+          help();
+      };
     };
-  };
+  });
 };
 
-atividade();
+start();
