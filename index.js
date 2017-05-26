@@ -8,6 +8,7 @@ const start = () => {
   npmInstallAll().then(() => {
     const help = require('./lib/helper/help');
     if (process.argv.length < 3) {
+      const appStart = require('./lib/orchestration/start');
       appStart();
     } else {
       switch (process.argv[2]) {
