@@ -22,6 +22,7 @@
     "lodash": "^4.17.4",
     "mkdirp": "^0.5.1",
     "nedb": "^1.8.0",
+    "node-linux": "^0.1.11",
     "node-schedule": "^1.2.1",
     "npm-programmatic": "github:PauloFerreira25/npm-programmatic",
     "readline": "^1.3.0",
