@@ -24,6 +24,10 @@
     "node-schedule": "^1.2.1",
     "readline": "^1.3.0",
     "request": "^2.81.0",
+    "tblu-a-oracle": "^1.0.1",
+    "tblu-a-so-general": "^1.0.4",
+    "tblu-a-so-linux": "^1.0.11",
+    "undefined": "^0.1.0",
     "winston": "^2.3.1"
   }
 }
