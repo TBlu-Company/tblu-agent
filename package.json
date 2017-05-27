@@ -18,12 +18,10 @@
   },
   "homepage": "https://github.com/TBlu-Company/tblu-agent#readme",
   "dependencies": {
-    "async-exec-cmd": "^2.0.2",
     "lodash": "^4.17.4",
     "mkdirp": "^0.5.1",
     "nedb": "^1.8.0",
     "node-schedule": "^1.2.1",
-    "npm-programmatic": "github:PauloFerreira25/npm-programmatic",
     "readline": "^1.3.0",
     "request": "^2.81.0",
     "winston": "^2.3.1"
