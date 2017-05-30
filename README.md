@@ -1,6 +1,21 @@
 # tblu-agent
-[![N|TBLu-A](https://tblu.com.br/static/smallLogo.png)](https://tblu.com.br)
+[![TBLu-A](https://tblu.com.br/static/smallLogo.png)](https://tblu.com.br)
+
 TBlu-A é um projeto da empresa [TBlu Company](https://tblu.com.br) para o agente coletor de metricas e transmissor de coletas.
+
+# Dependencia
+
+- NodeJS
+Este projeto  desenvolvido em NodeJS, este é requerido para o seu funcionamento.
+[![NodeJS](https://github.com/nodejs/nodejs.org/blob/master/static/images/logos/nodejs.png)](https://nodejs.org)
+
+
+- Acesso ao NPM (via internet)
+Também é necessario o acesso a internet no serviço do NPM para instalação de novas dependencias e modulos
+
+
+- Acesso ao API TBlu (via internet)
+Para o envio e recebimento de metricas e coletas, o acesso ao site **https://api.tblu.com.br** também deve estar liberado
 
 # Como utilizar
 Deve se utilizar os parametros **start** ou **service**:
