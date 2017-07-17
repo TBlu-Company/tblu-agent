@@ -7,6 +7,10 @@ const npmInstallAll = require('./lib/npm/npm-installAll')
 const start = () => {
   npmInstallAll().then(() => {
     const help = require('./lib/helper/help');
+    if (process.argv.indexOf('debug') >= 0) {
+      global.properties.setLoggerLevel('debug');
+      process.argv.splice(process.argv.indexOf('debug'), 1);
+    }
     if (process.argv.length < 3) {
       const appStart = require('./lib/orchestration/start');
       appStart();
