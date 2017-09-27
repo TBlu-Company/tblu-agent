@@ -1,8 +1,8 @@
-'use strict'
+'use strict';
 const path = require('path');
 global.properties = require('./lib/global/properties');
 global.properties.setAppDir(path.dirname(__filename));
-const npmInstallAll = require('./lib/npm/npm-installAll')
+const npmInstallAll = require('./lib/npm/npm-installAll');
 
 const start = () => {
   npmInstallAll().then(() => {
@@ -36,8 +36,8 @@ const start = () => {
           break;
         default:
           help();
-      };
-    };
+      }
+    }
   });
 };
 
